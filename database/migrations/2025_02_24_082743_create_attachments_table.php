@@ -10,11 +10,12 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create('brand_user', function (Blueprint $table) {
+    Schema::create('attachments', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('brand_id')->constrained()->onDelete('cascade');
+      $table->string('filename');
+      $table->string('path');
+      $table->foreignId('task_id')->constrained()->onDelete('cascade');
       $table->foreignId('user_id')->constrained()->onDelete('cascade');
-      $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
       $table->timestamps();
     });
   }
@@ -24,6 +25,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists('brand_user');
+    Schema::dropIfExists('attachments');
   }
 };

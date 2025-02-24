@@ -4,20 +4,16 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-  return Inertia::render('Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-    'laravelVersion' => Application::VERSION,
-    'phpVersion' => PHP_VERSION,
-  ]);
-});
-
 Route::middleware([
   'auth:sanctum',
   config('jetstream.auth_session'),
   'verified',
 ])->group(function () {
+
+  Route::get('/', function () {
+    return Inertia::render('Welcome');
+  });
+
   Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
   })->name('dashboard');
@@ -50,6 +46,16 @@ Route::middleware([
       [\App\Http\Controllers\InvitationController::class, 'reject']
     )->name('invitations.reject');
 
+    Route::get(
+      '/member-activity/{brand}/analytics',
+      [\App\Http\Controllers\AnalyticsController::class, 'memberActivity']
+    )->name('analytics.member-activity');
+
+    Route::get(
+      '/project-progress/{brand}/analytics',
+      [\App\Http\Controllers\AnalyticsController::class, 'projectProgress']
+    )->name('analytics.project-progress');
+
   });
 
   Route::prefix('projects')->name('projects.')->group(function () {
@@ -69,6 +75,30 @@ Route::middleware([
       '/destroy-many',
       [\App\Http\Controllers\ProjectController::class, 'destroyMany']
     )->name('destroy-many');
+
+  });
+
+  Route::prefix('tasks')->name('tasks.')->group(function () {
+
+    Route::post(
+      '/comments/{task}',
+      [\App\Http\Controllers\CommentController::class, 'store']
+    )->name('comments.store');
+
+    Route::delete(
+      '/comments/{comment}',
+      [\App\Http\Controllers\CommentController::class, 'destroy']
+    )->name('comments.destroy');
+
+    Route::post(
+      '/attachments/{task}',
+      [\App\Http\Controllers\AttachmentController::class, 'store']
+    )->name('attachments.store');
+
+    Route::delete(
+      '/attachments/{attachment}',
+      [\App\Http\Controllers\AttachmentController::class, 'destroy']
+    )->name('attachments.destroy');
 
   });
 });

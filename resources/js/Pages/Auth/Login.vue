@@ -62,6 +62,7 @@ const submit = () => {
           v-model="form.password"
           type="password"
           required
+          placeholder="Enter your password"
           autocomplete="current-password"
           :errors="form.errors.password"
         />
@@ -90,5 +91,9 @@ const submit = () => {
         </Button>
       </div>
     </form>
+
+    <div class="text-sm mt-4 text-center">
+      Don't have an account? <Link class="text-blue-800" :href="route('register')">Register here</Link>
+    </div>
   </AuthenticationCard>
 </template>

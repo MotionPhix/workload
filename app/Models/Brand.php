@@ -84,7 +84,7 @@ class Brand extends Model implements HasMedia
   public function logo(): Attribute {
     return Attribute::make(function () {
       $this->media->map(function ($m) {
-        return $m->getUrl();  // Get the URL for each media
+        $m->getFirstMediaUrl('logo', 'thumb');
       })[0];
     });
   }

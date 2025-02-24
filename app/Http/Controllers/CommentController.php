@@ -10,7 +10,10 @@ class CommentController extends Controller
 {
   public function store(Request $request, Task $task)
   {
-    $request->validate(['content' => 'required|string']);
+    $request->validate([
+      'content' => 'required|string',
+       'file' => 'required|file|mimes:jpeg,png,pdf,txt|max:2048', // 2MB max
+    ]);
 
     $task->comments()->create([
       'content' => $request->content,

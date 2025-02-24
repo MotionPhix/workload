@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\Brand;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -57,6 +58,10 @@ class CreateNewUser implements CreatesNewUsers
       $brand->addMediaFromRequest('brand_logo')
         ->toMediaCollection('logo');
     }
+
+    $roles = Role::select(['id', 'name'])->all();
+
+    if
 
     // Attach the brand to the user
     $user->brands()->attach($brand->id, ['role' => 'owner']);

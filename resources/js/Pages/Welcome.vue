@@ -4,7 +4,7 @@ import {router, usePage} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 
 const notifications = ref([]);
-const {brand} = usePage().props.brand
+const brand = usePage().props.brand
 
 onMounted(() => {
   setTimeout(() => {
