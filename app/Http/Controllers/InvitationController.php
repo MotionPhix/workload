@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\InvitationSent;
 use App\Models\Brand;
 use App\Models\Invitation;
 use App\Models\User;
@@ -40,6 +41,9 @@ class InvitationController extends Controller
 
     // Send the invitation email
     Mail::to($request->email)->send(new BrandInvitation($invitation));
+
+    // Dispatch the event
+    event(new InvitationSent($invitation));
 
     return redirect()->back()->with('success', 'Invitation sent successfully!');
   }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -15,10 +16,13 @@ class CommentController extends Controller
        'file' => 'required|file|mimes:jpeg,png,pdf,txt|max:2048', // 2MB max
     ]);
 
-    $task->comments()->create([
-      'content' => $request->content,
+    $comment = $task->comments()->create([
+      'content' => $request->get('content'),
       'user_id' => auth()->id(),
     ]);
+
+    // Dispatch the event
+    event(new CommentCreated($comment));
 
     return redirect()->back()->with('success', 'Comment added successfully!');
   }

@@ -4,18 +4,21 @@ import { Progress } from '@/Components/ui/progress';
 import { Button } from '@/Components/ui/button';
 import { IconEye } from '@tabler/icons-vue';
 import Pagination from '@/Components/Pagination.vue';
+import axios from "axios";
 
 const { brand } = defineProps({ brand: Object });
 
 const memberActivity = ref({ data: [], links: [] });
 const projectProgress = ref([]);
 
-onMounted(async () => {
-  const response = await axios.get(route('analytics.member-activity', brand.id));
-  memberActivity.value = response.data;
+onMounted(() => {
+  setTimeout(() => {
+    const response = axios.get(route('analytics.member-activity', brand.id));
+    memberActivity.value = response.data;
 
-  const progressResponse = await axios.get(route('analytics.project-progress', brand.id));
-  projectProgress.value = progressResponse.data;
+    const progressResponse = axios.get(route('analytics.project-progress', brand.id));
+    projectProgress.value = progressResponse.data;
+  }, 300)
 });
 
 const formatDate = (date) => {

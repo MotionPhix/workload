@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomReportController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -83,7 +85,8 @@ Route::middleware([
     Route::post(
       '/comments/{task}',
       [\App\Http\Controllers\CommentController::class, 'store']
-    )->name('comments.store');
+    )->middleware('permission:create_task')
+      ->name('comments.store');
 
     Route::delete(
       '/comments/{comment}',
@@ -96,9 +99,20 @@ Route::middleware([
     )->name('attachments.store');
 
     Route::delete(
-      '/attachments/{attachment}',
+      '/attachments/{task}/{mediaId}',
       [\App\Http\Controllers\AttachmentController::class, 'destroy']
-    )->name('attachments.destroy');
-
+    )->middleware('permission:delete_task')
+      ->name('attachments.destroy');
   });
+
+  Route::get('/reports/tasks/export', [ReportController::class, 'exportTasks'])->name('reports.export-tasks');
+  Route::get('/reports/projects/export', [ReportController::class, 'exportProjects'])->name('reports.export-projects');
+  Route::get('/brands/{brand}/analytics/export', [ReportController::class, 'exportBrandAnalytics'])->name('reports.export-brand-analytics');
+
+  Route::get('/tasks/{task}/report', [ReportController::class, 'taskReport'])->name('reports.task');
+  Route::get('/projects/{project}/report', [ReportController::class, 'projectReport'])->name('reports.project');
+  Route::get('/brands/{brand}/analytics-report', [ReportController::class, 'brandAnalyticsReport'])->name('reports.brand-analytics');
+
+  Route::get('/reports/tasks', [CustomReportController::class, 'taskReport'])->name('reports.custom-task');
+  Route::get('/reports/projects', [CustomReportController::class, 'projectReport'])->name('reports.custom-project');
 });

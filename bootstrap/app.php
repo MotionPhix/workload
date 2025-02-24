@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
       'brand.access' => \App\Http\Middleware\EnsureBrandAccess::class,
       'brand.role' => \App\Http\Middleware\CheckBrandRole::class,
+      'permission' => \App\Http\Middleware\CheckPermission::class,
     ]);
 
     $middleware->api([

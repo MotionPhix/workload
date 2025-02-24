@@ -85,4 +85,10 @@ class User extends Authenticatable
   {
     return $this->belongsTo(Brand::class, 'current_brand_id');
   }
+
+  public function hasPermission(Brand $brand, string $permission)
+  {
+    $role = $this->brands()->where('brand_id', $brand->id)->first()->pivot->role;
+    return $role->permissions->contains('name', $permission);
+  }
 }

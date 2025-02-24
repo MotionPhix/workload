@@ -59,12 +59,17 @@ class CreateNewUser implements CreatesNewUsers
         ->toMediaCollection('logo');
     }
 
-    $roles = Role::select(['id', 'name'])->all();
+    // Fetch the "owner" role
+    $ownerRole = Role::where('name', 'owner')->first();
 
-    if
+    if (!$ownerRole) {
+      throw new \Exception('Owner role not found. Please seed the roles table.');
+    }
 
-    // Attach the brand to the user
-    $user->brands()->attach($brand->id, ['role' => 'owner']);
+    // $user->brands()->attach($brand->id, ['role' => 'owner']);
+
+    // Attach the brand to the user with the "owner" role
+    $user->brands()->attach($brand->id, ['role_id' => $ownerRole->id]);
 
     $user->update(['current_brand_id' => $brand->id]);
 
