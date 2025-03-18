@@ -6,7 +6,6 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -37,40 +36,39 @@ class FortifyServiceProvider extends ServiceProvider
     Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
     Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-    Fortify::authenticateUsing(function (LoginRequest $request) {
-      try {
-        $request->authenticate();
+    Fortify::authenticateUsing(function (Request $request) {
+      $user = User::where('email', $request->email)->first();
 
-        $user = User::where('email', $request->email)->first();
-
-        // Set the current brand if not set
-        if (!$user->current_brand_id) {
-          $latestBrand = $user->brands()
-            ->latest()
-            ->first();
-
-          if ($latestBrand) {
-            $user->current_brand_id = $latestBrand->id;
-            $user->save();
-          } else {
-            throw ValidationException::withMessages([
-              'email' => 'No brands associated with this account.',
-            ]);
-          }
-        }
-
-        // Verify brand access
-        if (!$user->brands()->where('brands.id', $user->current_brand_id)->exists()) {
-          throw ValidationException::withMessages([
-            'email' => 'Access to the selected brand is not authorized.',
-          ]);
-        }
-
-        return $user;
-      } catch (ValidationException $e) {
-        throw $e;
+      if (!$user || !Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+          'email' => trans('auth.failed'),
+        ]);
       }
 
+      // Set the current brand if not set
+      if (!$user->current_brand_id) {
+        $latestBrand = $user->brands()
+          ->latest()
+          ->first();
+
+        if ($latestBrand) {
+          $user->current_brand_id = $latestBrand->id;
+          $user->save();
+        } else {
+          throw ValidationException::withMessages([
+            'email' => 'No brands associated with this account.',
+          ]);
+        }
+      }
+
+      // Verify brand access
+      if (!$user->brands()->where('brands.id', $user->current_brand_id)->exists()) {
+        throw ValidationException::withMessages([
+          'email' => 'Access to the selected brand is not authorized.',
+        ]);
+      }
+
+      return $user;
     });
 
     RateLimiter::for('login', function (Request $request) {

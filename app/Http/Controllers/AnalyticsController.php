@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller
 {
+  public function index()
+  {
+
+  }
+
   public function memberActivity(Brand $brand)
   {
     $activityLogs = ActivityLog::where('brand_id', $brand->id)

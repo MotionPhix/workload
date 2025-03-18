@@ -25,4 +25,14 @@ Route::prefix('brands')->name('api.brands.')->group(function () {
 
   })->name('index');
 
+  Route::get(
+    '/member-activity/{brand}/analytics',
+    [\App\Http\Controllers\AnalyticsController::class, 'memberActivity']
+  )->name('analytics.member-activity');
+
+  Route::get(
+    '/project-progress/{brand}/analytics',
+    [\App\Http\Controllers\AnalyticsController::class, 'projectProgress']
+  )->name('analytics.project-progress');
+
 })->middleware('auth:sanctum');

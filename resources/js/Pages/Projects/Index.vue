@@ -10,6 +10,7 @@ import { Badge } from '@/Components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu';
 import { IconPlus, IconDots } from '@tabler/icons-vue';
 import Pagination from '@/Components/Pagination.vue';
+import PageHeader from "@/Components/PageHeader.vue";
 
 const props = defineProps({
   projects: Object,
@@ -66,20 +67,46 @@ const priorityVariant = (priority) => {
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString();
 };
+
+// Add this for the PageHeader component
+const pageActions = [
+  {
+    label: 'New Project',
+    icon: IconPlus,
+    href: route('projects.create')
+  }
+]
+
+const breadcrumbs = [
+  {
+    label: 'Dashboard',
+    href: route('dashboard')
+  },
+  {
+    label: 'Projects'
+  }
+]
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Projects</h1>
-      <Link :href="route('projects.create')">
-        <Button>
-          <IconPlus class="w-4 h-4 mr-2" />
-          New Project
-        </Button>
-      </Link>
-    </div>
+<!--    <div class="flex items-center justify-between">-->
+<!--      <h1 class="text-2xl font-bold">Projects</h1>-->
+<!--      <Link :href="route('projects.create')">-->
+<!--        <Button>-->
+<!--          <IconPlus class="w-4 h-4 mr-2" />-->
+<!--          New Project-->
+<!--        </Button>-->
+<!--      </Link>-->
+<!--    </div>-->
+
+    <PageHeader
+      title="Projects"
+      description="Manage and track all your organization's projects"
+      :breadcrumbs="breadcrumbs"
+      :actions="pageActions"
+    />
 
     <!-- Filters -->
     <div class="flex items-center gap-4">
@@ -121,6 +148,7 @@ const formatDate = (date) => {
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         <TableRow v-for="project in projects.data" :key="project.id">
           <TableCell>

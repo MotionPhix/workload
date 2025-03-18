@@ -47,17 +47,6 @@ Route::middleware([
       '/invitations/{token}/reject',
       [\App\Http\Controllers\InvitationController::class, 'reject']
     )->name('invitations.reject');
-
-    Route::get(
-      '/member-activity/{brand}/analytics',
-      [\App\Http\Controllers\AnalyticsController::class, 'memberActivity']
-    )->name('analytics.member-activity');
-
-    Route::get(
-      '/project-progress/{brand}/analytics',
-      [\App\Http\Controllers\AnalyticsController::class, 'projectProgress']
-    )->name('analytics.project-progress');
-
   });
 
   Route::prefix('projects')->name('projects.')->group(function () {
