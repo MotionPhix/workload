@@ -61,6 +61,7 @@ import {
   SelectLabel,
   SelectGroup
 } from '@/Components/ui/select';
+import GlobalModal from "@/Components/GlobalModal.vue";
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
@@ -72,6 +73,7 @@ createInertiaApp({
 
       // components for the ui globally imported
       .component('FormField', FormField)
+      .component('GlobalModal', GlobalModal)
       .component('Calendar', Calendar)
       .component('ModalLink', ModalLink)
       .component('Button', Button)
