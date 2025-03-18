@@ -186,7 +186,7 @@ const deleteProject = (project: Project) => {
 
       <div
         v-else
-        class="rounded-md border">
+        class="rounded-md border overflow-hidden">
 
         <!-- Filters -->
         <div class="flex items-center gap-4">
